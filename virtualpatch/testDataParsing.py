@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import requests
 import json
 
@@ -43,6 +41,7 @@ def parseLocalXconnects():
 			# Ensure aSide and zSide are both defined and not empty strings
 			if aSide and zSide:
 				xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
+
 	return xconnectParsedOutput
 
 
