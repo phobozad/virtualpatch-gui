@@ -1,0 +1,9 @@
+{
+	"deviceAccess": [{
+		"deviceHost": "192.168.2.133",
+		"devicePort": 443,
+		"deviceUser": "admin",
+		"devicePass": "cisco",
+		"deviceDescription": "3850 Test Switch"
+	}]
+}
