@@ -45,7 +45,4 @@ def parseLocalXconnects():
 				xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
 	return xconnectParsedOutput
 
-localxc=parseLocalXconnects()
-
-print(localxc["A"])
 
