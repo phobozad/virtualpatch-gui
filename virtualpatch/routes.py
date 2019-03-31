@@ -71,6 +71,33 @@ def xcDelete(name):
 	else:
 		redirect("/xc/edit/{name}?errorMessage=Error: Delete Failed.".format(name=name))
 
+def xcAddPageGenerate(statusMessage="", errorMessage=""):
+	localXcList=testDataParsing.parseLocalXconnects()
+	return template("addPage", statusMessage=statusMessage, errorMessage=errorMessage, xcIntOptions=testDataParsing.interfaceList())
+
+@app.route("/xc/add")
+def xcAddPage():
+	errorMessage=request.params.get("errorMessage","")
+	statusMessage=request.params.get("statusMessage","")
+	return xcAddPageGenerate(statusMessage=statusMessage, errorMessage=errorMessage)
+
+@app.route("/xc/add", method="POST")
+def xcAdd():
+	# Ensure we have both A and Z sides defined
+	if not (("a-side" in request.forms) and ("z-side" in request.forms) and ("xcName" in request.forms)):
+		return xcAddPageGenerate(errorMessage="Invalid interface selection or Name")
+
+	aSide = request.forms["a-side"]
+	zSide = request.forms["z-side"]
+	xcName = request.forms["xcName"]
+
+	addResponse = deviceCommands.xcAdd(xcName,aSide,zSide)
+	
+	if addResponse["status"]=="ok":
+		redirect("/?statusMessage=Success: Added Patch {name}.".format(name=xcName))
+	else:
+		return xcAddPageGenerate(errorMessage="Error: Add Failed.")
+
 
 @app.route("/ports")
 def viewSwitchPorts(statusMessage="", errorMessage=""):

@@ -23,11 +23,17 @@ def xcEdit(xcName,aSide,zSide):
 	resultOutput["iosxe_status_code"]=restConfResponse.status_code
 	resultOutput["iosxe_response"]=restConfResponse.text
 
+	# Do some parsing of any 2xx code to summarize to a single good/bad result output
+	if (restConfResponse.status_code >= 200) and (restConfResponse.status_code < 300):
+		resultOutput["status"]="ok"
+	else:
+		resultOutput["status"]="failed"
+
 	return resultOutput	
 
 def xcDelete(xcName):
 	resultOutput={}
-
+	
 	headers={"Content-Type": "application/yang-data+json", "Accept": "application/yang-data+json"}
 	url = "https://{host}:{port}/restconf/data/Cisco-IOS-XE-native:native/l2vpn/xconnect/context={context}".format(host=deviceHost, port=devicePort, context=xcName)
 
@@ -43,5 +49,14 @@ def xcDelete(xcName):
 	else:
 		resultOutput["status"]="failed"
 
-	return resultOutput	
+	return resultOutput
+
+
+def xcAdd(xcName,aSide,zSide):
+	# Adding is currently done with same REST call as an edit, so just call the edit function under the seams
+	# At some point for more advanced functionality these two actions may deviate so keep the add function separate for future use
+
+	resultOutput=xcEdit(xcName,aSide,zSide)
+
+	return resultOutput
 
