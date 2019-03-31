@@ -15,14 +15,14 @@
 <nav class="navbar navbar-dark bg-dark">
   <span class="navbar-brand mb-0 h1">Virtual Patch Panel</span>
 </nav>
-<div class="alert alert-success" role="alert">{{statusMessage}}</div>
-<div id="error" class="alert alert-danger" role="alert">{{errorMessage}}</div>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/">Patch Panel</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit Patch</li>
   </ol>
 </nav>
+<div class="alert alert-success" role="alert">{{statusMessage}}</div>
+<div id="error" class="alert alert-danger" role="alert">{{errorMessage}}</div>
 <div class="container">
 <h1>Edit Patch - {{xcName}}</h1>
 <form action="/xcedit/{{xcName}}" method="post">

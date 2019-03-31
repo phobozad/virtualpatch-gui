@@ -1,5 +1,6 @@
 from virtualpatch import app
 from virtualpatch import testDataParsing
+from virtualpatch import deviceCommands
 from bottle import abort, request, template
 import requests
 import json
@@ -19,19 +20,15 @@ def getPhysicalXC(name):
 
 @app.route("/api/physicalxc/<name>", method="PATCH")
 def setPhysicalXC(name):
-	headers={"Content-Type": "application/yang-data+json", "Accept": "application/yang-data+json"}
-	url="https://192.168.2.133/restconf/data/Cisco-IOS-XE-native:native/l2vpn/xconnect/context={context}".format(context=name)
-	bodyDict = request.json
-	
+	if not (("a-side" in request.json) and ("z-side" in request.json)):
+		abort(400, "Invalid interface selection.")
 
-	restConfRequest = '{"context":[{"xc-name":"' + name + '","xc-Mode-config-xconnect":{"member":{"interface":[{"interface":"' + bodyDict["a-side"] + '"},{"interface":"' + bodyDict["z-side"] + '"}]}}}]}'
+	editResponse = deviceCommands.xcEdit(name, request.json["a-side"], request.json["z-side"])
 	
-	restConfResponse = requests.put(url, auth=("admin","cisco"), headers=headers, verify=False, data=restConfRequest)
-
-	if (restConfResponse.status_code >= 200) and (restConfResponse.status_code < 300):
-		return "IOS-XE says: {}".format(restConfResponse.status_code)
+	if (editResponse.get("iosxe_status_code", 0) >= 200) and (editResponse.get("iosxe_status_code", 0) < 300):
+		return "IOS-XE says: {}".format(editResponse["iosxe_status_code"])
 	else:
-		abort(restConfResponse.status_code, "IOS-XE says: \r\n{}".format(restConfResponse.text))
+		abort(editResponse.get("iosxe_status_code",500), "IOS-XE says: \r\n{}".format(editResponse.get("iosxe_response", "")))
 
 @app.route("/")
 def mainPage():
@@ -50,22 +47,17 @@ def xcEditPageGenerate(name, statusMessage="", errorMessage=""):
 
 @app.route("/xcedit/<name>", method="POST")
 def xcEdit(name):
-	headers={"Content-Type": "application/yang-data+json", "Accept": "application/yang-data+json"}
-	url="https://192.168.2.133/restconf/data/Cisco-IOS-XE-native:native/l2vpn/xconnect/context={context}".format(context=name)
-	bodyDict = request.forms
-
-		
-	if not (("a-side" in bodyDict) and ("z-side" in bodyDict)):
+	# Ensure we have both A and Z sides defined
+	# We need to re-push both xconnect members at the same time when we update the device
+	if not (("a-side" in request.forms) and ("z-side" in request.forms)):
 		return xcEditPageGenerate(name, errorMessage="Invalid interface selection")
 	
-	restConfRequest = '{"context":[{"xc-name":"' + name + '","xc-Mode-config-xconnect":{"member":{"interface":[{"interface":"' + bodyDict["a-side"] + '"},{"interface":"' + bodyDict["z-side"] + '"}]}}}]}'
-	
-	restConfResponse = requests.put(url, auth=("admin","cisco"), headers=headers, verify=False, data=restConfRequest)
+	editResponse = deviceCommands.xcEdit(name, request.forms["a-side"], request.forms["z-side"])
 
-	if (restConfResponse.status_code >= 200) and (restConfResponse.status_code < 300):
-		return xcEditPageGenerate(name, statusMessage="Change Saved. \r\nIOS-XE says: {}".format(restConfResponse.status_code))
+	if (editResponse.get("iosxe_status_code", 0) >= 200) and (editResponse.get("iosxe_status_code", 0) < 300):
+		return xcEditPageGenerate(name, statusMessage="Change Saved. \r\nIOS-XE says: {}".format(editResponse.get("iosxe_status_code", "")))
 	else:
-		return xcEditPageGenerate(name, errorMessage="Error saving change. \r\nIOS-XE says: \r\n{}".format(restConfResponse.text))
+		return xcEditPageGenerate(name, errorMessage="Error saving change. \r\nIOS-XE says: \r\n{}".format(editResponse.get("iosxe_response")))
 
 @app.route("/ports")
 def viewSwitchPorts(statusMessage="", errorMessage=""):
