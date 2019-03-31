@@ -24,6 +24,8 @@ def parseLocalXconnects():
 
 	# Iterate through xconnects and build parsed output of xconnect pairs
 	for xconnect in responseDict["Cisco-IOS-XE-l2vpn:context"]:
+		aSide=""
+		zSide=""
 
 		# Only grab local xconnects
 		# As of 16.8.1 any xconnect to an MPLS destination under an interface config
@@ -38,10 +40,39 @@ def parseLocalXconnects():
 				aSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][0]["interface"]
 				zSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][1]["interface"]
 			
-			# Ensure aSide and zSide are both defined and not empty strings
-			if aSide and zSide:
-				xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
+				# Ensure aSide and zSide are both defined and not empty strings
+				if aSide and zSide:
+					xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
 
 	return xconnectParsedOutput
 
+def interfaceList():
+	
+	interfaceList = []
+	intTypes=["GigabitEthernet"]
 
+	for intType in intTypes:
+		headers={"Content-Type": "application/yang-data+json",
+		               "Accept": "application/yang-data+json"}
+	
+		url = "https://{host}:{port}/restconf/data/Cisco-IOS-XE-native:native/interface/{intType}?fields=name;description".format(host=deviceHost, port=devicePort, intType=intType)
+
+		# Get list of interface names & descriptions
+		response = requests.get(url, auth=(deviceUser, devicePass), headers=headers, verify=False)
+		# Parse JSON response into python dict
+		responseDict = response.json()
+
+		# Iterate through interfaces and build parsed output of interface names
+		for interface in responseDict["Cisco-IOS-XE-native:{}".format(intType)]:
+			# If the description is set, take a closer look at it
+			# Otherwise go to the next step if there isn't a description (avoids keyerror w/no description)
+			if "description" in interface:
+				# We filter out any interface that has a description starting with "$$NoVPP" (any case)
+				# If the descripton starts with this, it won't get added to the list
+				if not interface["description"].lower().startswith("$$novpp"):
+					interfaceList.append({"intName": intType + interface["name"], "intDescription": interface["description"]})
+			else:
+				# If there isn't a description add interface to list with blank description
+				interfaceList.append({"intName": intType + interface["name"], "intDescription": ""})
+
+	return interfaceList;
