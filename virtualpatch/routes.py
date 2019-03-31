@@ -1,5 +1,5 @@
 from virtualpatch import app
-from virtualpatch import testDataParsing
+from virtualpatch import dataParsing
 from virtualpatch import deviceCommands
 from bottle import abort, request, template, redirect
 import requests
@@ -7,11 +7,11 @@ import json
 
 @app.route("/api/physicalxc")
 def getPhysicalXC():
-	return testDataParsing.parseLocalXconnects()
+	return dataParsing.parseLocalXconnects()
 
 @app.route("/api/physicalxc/<name>")
 def getPhysicalXC(name):
-	localXcList=testDataParsing.parseLocalXconnects()
+	localXcList=dataParsing.parseLocalXconnects()
 	if name in localXcList:
 		return localXcList[name]
 	else:
@@ -34,7 +34,7 @@ def setPhysicalXC(name):
 def mainPage():
 	errorMessage=request.params.get("errorMessage","")
 	statusMessage=request.params.get("statusMessage","")
-	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects(), xcIntOptions=testDataParsing.interfaceList(), errorMessage=errorMessage, statusMessage=statusMessage)
+	return template("mainPage", localXcList=dataParsing.parseLocalXconnects(), xcIntOptions=dataParsing.interfaceList(), errorMessage=errorMessage, statusMessage=statusMessage)
 
 @app.route("/xc/edit/<name>")
 def xcEditPage(name):
@@ -43,10 +43,10 @@ def xcEditPage(name):
 	return xcEditPageGenerate(name, errorMessage=errorMessage, statusMessage=statusMessage)
 
 def xcEditPageGenerate(name, statusMessage="", errorMessage=""):
-	localXcList=testDataParsing.parseLocalXconnects()
+	localXcList=dataParsing.parseLocalXconnects()
 	curASide=localXcList[name]["a-side"]
 	curZSide=localXcList[name]["z-side"]
-	return template("editPage", xcName=name, statusMessage=statusMessage, errorMessage=errorMessage, curASide=curASide, curZSide=curZSide, xcIntOptions=testDataParsing.interfaceList())
+	return template("editPage", xcName=name, statusMessage=statusMessage, errorMessage=errorMessage, curASide=curASide, curZSide=curZSide, xcIntOptions=dataParsing.interfaceList())
 
 
 @app.route("/xc/edit/<name>", method="POST")
@@ -72,8 +72,8 @@ def xcDelete(name):
 		redirect("/xc/edit/{name}?errorMessage=Error: Delete Failed.".format(name=name))
 
 def xcAddPageGenerate(statusMessage="", errorMessage=""):
-	localXcList=testDataParsing.parseLocalXconnects()
-	return template("addPage", statusMessage=statusMessage, errorMessage=errorMessage, xcIntOptions=testDataParsing.interfaceList())
+	localXcList=dataParsing.parseLocalXconnects()
+	return template("addPage", statusMessage=statusMessage, errorMessage=errorMessage, xcIntOptions=dataParsing.interfaceList())
 
 @app.route("/xc/add")
 def xcAddPage():
@@ -101,4 +101,4 @@ def xcAdd():
 
 @app.route("/ports")
 def viewSwitchPorts(statusMessage="", errorMessage=""):
-	return template("viewPorts", statusMessage=statusMessage, errorMessage=errorMessage, intList=testDataParsing.interfaceList(), cdpNeighbors=testDataParsing.parseCdpNeighbors())
+	return template("viewPorts", statusMessage=statusMessage, errorMessage=errorMessage, intList=dataParsing.interfaceList(), cdpNeighbors=dataParsing.parseCdpNeighbors())
