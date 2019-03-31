@@ -5,11 +5,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<style>
-.alert:empty {
- display: none;
-}
-</style>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark">
@@ -20,8 +15,18 @@
     <li class="breadcrumb-item active" aria-current="page">Patch Panel</li>
   </ol>
 </nav>
-<div class="alert alert-success" role="alert">{{statusMessage}}</div>
-<div id="error" class="alert alert-danger" role="alert">{{errorMessage}}</div>
+% if statusMessage:
+	<div class="alert alert-success alert-dismissible fade show" role="alert">
+	{{statusMessage}}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	</div>
+% end
+% if errorMessage:
+	<div class="alert alert-danger" role="alert">
+	{{errorMessage}}
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	</div>
+% end
 <div class="container">
 <h1>Patch Panel</h1>
 <table class="table">
