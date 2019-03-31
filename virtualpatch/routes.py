@@ -35,7 +35,7 @@ def setPhysicalXC(name):
 
 @app.route("/")
 def mainPage():
-	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects())
+	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects(), xcIntOptions=testDataParsing.interfaceList())
 
 @app.route("/xcedit/<name>")
 def xcEditPage(name):

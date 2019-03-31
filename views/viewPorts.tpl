@@ -34,54 +34,29 @@
 	<th>CDP Neighbors</th>
 	<th></th>
   </tr>
-%  for interface in intList:
+%  for intName,intDetails in intList.items():
    <tr>
 	<td></td>
-	<td>{{interface["intName"]}}</td>
-	<td>{{interface["intDescription"]}}</td>
+	<td>{{intName}}</td>
+	<td>{{intDetails["intDescription"]}}</td>
 	<td></td>
 	<td>
-%	  if interface["intName"] in cdpNeighbors:
-%		curCdp=cdpNeighbors[interface["intName"]]
+%	  if intName in cdpNeighbors:
+%		curCdp=cdpNeighbors[intName]
 		<a role="button" class="btn btn-outline-info" data-toggle="popover" data-container="body" data-placement="top" tabindex="0" data-trigger="focus" data-html="true" title="CDP Neighbor Details"
 data-content="
-% if 'device=name' in curCdp:
-    <strong>Device Name:</strong> {{curCdp['device-name']}}<br>
-% end
-% if 'device-name' in curCdp:
-    <strong>Device Name:</strong> {{curCdp['device-name']}}<br>
-% end
-% if 'platform-name' in curCdp:
-    <strong>Platform:</strong> {{curCdp['platform-name']}}<br>
-% end
-% if 'version' in curCdp:
-    <strong>Version:</strong> {{curCdp['version']}}<br>
-% end
-% if 'port-id' in curCdp:
-    <strong>Port ID:</strong> {{curCdp['port-id']}}<br>
-% end
-% if 'ip-address' in curCdp:
-    <strong>IP Address:</strong> {{curCdp['ip-address']}}<br>
-% end
-% if 'mgmt-address' in curCdp:
-    <strong>MGMT IP Address:</strong> {{curCdp['mgmt-address']}}<br>
-% end
-% if 'capability' in curCdp:
-    <strong>Capabilities:</strong> {{curCdp['capability']}}<br>
-% end
-% if 'duplex' in curCdp:
-    <strong>Duplex:</strong> {{curCdp['duplex'].split('-')[1]}}<br>
-% end
-% if 'native-vlan' in curCdp:
-    <strong>Native VLAN:</strong> {{curCdp['native-vlan']}}<br>
-% end
-% if 'power-available' in curCdp:
-    <strong>PoE Available:</strong> {{curCdp['power-available']['power-available']}}<br>
-% end
-% if 'power-request' in curCdp:
-    <strong>PoE Requested:</strong> {{curCdp['power-request']['power-request-level']}}<br>
-% end
-">{{cdpNeighbors[interface["intName"]]["device-name"]}}</a>
+    <strong>Device Name:</strong> {{curCdp.get('device-name','')}}<br>
+    <strong>Platform:</strong> {{curCdp.get('platform-name', '')}}<br>
+    <strong>Version:</strong> {{curCdp.get('version', '')}}<br>
+    <strong>Port ID:</strong> {{curCdp.get('port-id', '')}}<br>
+    <strong>IP Address:</strong> {{curCdp.get('ip-address', '')}}<br>
+    <strong>MGMT IP Address:</strong> {{curCdp.get('mgmt-address', '')}}<br>
+    <strong>Capabilities:</strong> {{curCdp.get('capability', '')}}<br>
+    <strong>Duplex:</strong> {{curCdp.get('duplex', '').split('-')[1]}}<br>
+    <strong>Native VLAN:</strong> {{curCdp.get('native-vlan', '')}}<br>
+    <strong>PoE Available:</strong> {{curCdp.get('power-available',{}).get('power-available', '')}}<br>
+    <strong>PoE Requested:</strong> {{curCdp.get('power-request', {}).get('power-request-level', '')}}<br>
+"> {{cdpNeighbors.get(intName,{}).get("device-name","")}}</a>
 %	  end
 	</td>
 	<td><a href="#"><button type="button" class="btn btn-secondary">Edit...</button></a></td>

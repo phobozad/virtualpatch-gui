@@ -55,7 +55,7 @@ def parseLocalXconnects():
 
 def interfaceList():
 	
-	interfaceList = []
+	interfaceList = {}
 	intTypes=["GigabitEthernet"]
 
 	for intType in intTypes:
@@ -77,10 +77,10 @@ def interfaceList():
 				# We filter out any interface that has a description starting with "$$NoVPP" (any case)
 				# If the descripton starts with this, it won't get added to the list
 				if not interface["description"].lower().startswith("$$novpp"):
-					interfaceList.append({"intName": intType + interface["name"], "intDescription": interface["description"]})
+					interfaceList[intType + interface["name"]]={"intName": intType + interface["name"], "intDescription": interface["description"]}
 			else:
 				# If there isn't a description add interface to list with blank description
-				interfaceList.append({"intName": intType + interface["name"], "intDescription": ""})
+				interfaceList[intType + interface["name"]]={"intName": intType + interface["name"], "intDescription": ""}
 
 	return interfaceList;
 

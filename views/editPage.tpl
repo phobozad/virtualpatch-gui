@@ -32,15 +32,15 @@
 	<td>{{xcName}}</td>
 	<td>
 		<select id="a-side" name="a-side" class="form-control">
-% for xcInt in xcIntOptions:
-		<option value="{{xcInt["intName"]}}">{{xcInt["intName"] + " - " + xcInt["intDescription"]}}</option>
+% for xcInt,xcIntDetails in xcIntOptions.items():
+		<option value="{{xcInt}}">{{xcInt + " - " + xcIntDetails["intDescription"]}}</option>
 % end
 		</select>
 	</td>
 	<td>
 		<select id="z-side" name="z-side" class="form-control">
-% for xcInt in xcIntOptions:
-		<option value="{{xcInt["intName"]}}">{{xcInt["intName"] + " - " + xcInt["intDescription"]}}</option>
+% for xcInt,xcIntDetails in xcIntOptions.items():
+		<option value="{{xcInt}}">{{xcInt + " - " + xcIntDetails["intDescription"]}}</option>
 % end
 		</select>
 	</td>
