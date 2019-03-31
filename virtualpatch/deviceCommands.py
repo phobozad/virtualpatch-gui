@@ -25,3 +25,23 @@ def xcEdit(xcName,aSide,zSide):
 
 	return resultOutput	
 
+def xcDelete(xcName):
+	resultOutput={}
+
+	headers={"Content-Type": "application/yang-data+json", "Accept": "application/yang-data+json"}
+	url = "https://{host}:{port}/restconf/data/Cisco-IOS-XE-native:native/l2vpn/xconnect/context={context}".format(host=deviceHost, port=devicePort, context=xcName)
+
+	# We delete the xconnect by specifying the xconnect context name in a DELETE transaction
+	restConfResponse = requests.delete(url, auth=(deviceUser, devicePass), headers=headers, verify=False)
+
+	resultOutput["iosxe_status_code"]=restConfResponse.status_code
+	resultOutput["iosxe_response"]=restConfResponse.text
+
+	# Do some parsing of any 2xx code to summarize to a single good/bad result output
+	if (restConfResponse.status_code >= 200) and (restConfResponse.status_code < 300):
+		resultOutput["status"]="ok"
+	else:
+		resultOutput["status"]="failed"
+
+	return resultOutput	
+

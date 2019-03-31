@@ -5,6 +5,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+.alert:empty {
+ display: none;
+}
+</style>
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark">
@@ -15,6 +20,8 @@
     <li class="breadcrumb-item active" aria-current="page">Patch Panel</li>
   </ol>
 </nav>
+<div class="alert alert-success" role="alert">{{statusMessage}}</div>
+<div id="error" class="alert alert-danger" role="alert">{{errorMessage}}</div>
 <div class="container">
 <h1>Patch Panel</h1>
 <table class="table">
@@ -25,7 +32,7 @@
 	<td>{{xcInts["a-side"]}} - {{xcIntOptions.get(xcInts["a-side"],{}).get("intDescription","")}}</td>
 	<td>{{xcInts["z-side"]}} - {{xcIntOptions.get(xcInts["z-side"],{}).get("intDescription","")}}</td>
 	<td>
-	  <a href="/xcedit/{{xcName}}"><button type="button" class="btn btn-secondary">Edit...</button></a>  <button type="button" class="btn btn-danger">Delete</button>
+	  <a href="/xcedit/{{xcName}}"><button type="button" class="btn btn-outline-primary">Edit</button></a>
 	</td>
    </tr>
 % end

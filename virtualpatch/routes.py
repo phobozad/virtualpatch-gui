@@ -1,7 +1,7 @@
 from virtualpatch import app
 from virtualpatch import testDataParsing
 from virtualpatch import deviceCommands
-from bottle import abort, request, template
+from bottle import abort, request, template, redirect
 import requests
 import json
 
@@ -32,11 +32,15 @@ def setPhysicalXC(name):
 
 @app.route("/")
 def mainPage():
-	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects(), xcIntOptions=testDataParsing.interfaceList())
+	errorMessage=request.params.get("errorMessage","")
+	statusMessage=request.params.get("statusMessage","")
+	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects(), xcIntOptions=testDataParsing.interfaceList(), errorMessage=errorMessage, statusMessage=statusMessage)
 
 @app.route("/xcedit/<name>")
 def xcEditPage(name):
-	return xcEditPageGenerate(name)
+	errorMessage=request.params.get("errorMessage","")
+	statusMessage=request.params.get("statusMessage","")
+	return xcEditPageGenerate(name, errorMessage=errorMessage, statusMessage=statusMessage)
 
 def xcEditPageGenerate(name, statusMessage="", errorMessage=""):
 	localXcList=testDataParsing.parseLocalXconnects()
@@ -58,6 +62,15 @@ def xcEdit(name):
 		return xcEditPageGenerate(name, statusMessage="Change Saved. \r\nIOS-XE says: {}".format(editResponse.get("iosxe_status_code", "")))
 	else:
 		return xcEditPageGenerate(name, errorMessage="Error saving change. \r\nIOS-XE says: \r\n{}".format(editResponse.get("iosxe_response")))
+
+@app.route("/xc/delete/<name>", method="POST")
+def xcDelete(name):
+	deleteResponse = deviceCommands.xcDelete(name)
+	if deleteResponse["status"]=="ok":
+		redirect("/?statusMessage=Success: Deleted Patch {name}.".format(name=name))
+	else:
+		redirect("/xcedit/{name}?errorMessage=Error: Delete Failed.".format(name=name))
+
 
 @app.route("/ports")
 def viewSwitchPorts(statusMessage="", errorMessage=""):

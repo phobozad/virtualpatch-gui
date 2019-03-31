@@ -46,9 +46,40 @@
 	</td>
 </tr>
 </table>
-<br><br>
-<input type="Submit" value="Save" class="btn btn-primary"> <a href="/"><button type="button" class="btn btn-secondary">Cancel</button></a>
+<div class="row">
+	<div class="col">
+	   <input type="Submit" value="Save" class="btn btn-primary"> <a href="/"><button type="button" class="btn btn-secondary">Cancel</button></a>
+	</div>
+	<div class="col text-right">
+	   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteConfirmModal">Delete Patch</button>
+	</div>
+</div>
 </form>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalTitle">Confirm Deletion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the crossconnect "<strong>{{xcName}}</strong>"?
+      </div>
+      <div class="modal-footer">
+	<form action="/xc/delete/{{xcName}}" method="post">
+          <input type="submit" class="btn btn-danger" value="Yes - Delete">
+	</form>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No - Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 	document.getElementById("a-side").value="{{curASide}}"
 	document.getElementById("z-side").value="{{curZSide}}"
