@@ -25,7 +25,7 @@
 </nav>
 <div class="container">
 <h1>Edit Patch - {{xcName}}</h1>
-<form action="/edit/{{xcName}}" method="post">
+<form action="/xcedit/{{xcName}}" method="post">
 <table class="table">
 <tr> <th>Patch ID</th> <th>A-Side</th> <th>Z-Side</th> </tr>
 <tr>

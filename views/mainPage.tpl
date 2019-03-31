@@ -20,7 +20,7 @@
 <table class="table">
 <tr> <th>Patch ID</th> <th>A-Side</th> <th>Z-Side</th> <th></th></tr>
 % for xcName,xcInts in localXcList.items():
-    <tr> <td>{{xcName}}</td> <td>{{xcInts["a-side"]}}</td> <td>{{xcInts["z-side"]}}</td> <td><a href="/edit/{{xcName}}"><button type="button" class="btn btn-secondary">Edit...</button></a>  <button type="button" class="btn btn-danger">Delete</button></td></tr>
+    <tr> <td>{{xcName}}</td> <td>{{xcInts["a-side"]}}</td> <td>{{xcInts["z-side"]}}</td> <td><a href="/xcedit/{{xcName}}"><button type="button" class="btn btn-secondary">Edit...</button></a>  <button type="button" class="btn btn-danger">Delete</button></td></tr>
 % end
 </table>
 <button type="button" class="btn btn-primary">Add Patch...</button>
