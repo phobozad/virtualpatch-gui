@@ -83,3 +83,25 @@ def interfaceList():
 				interfaceList.append({"intName": intType + interface["name"], "intDescription": ""})
 
 	return interfaceList;
+
+def parseCdpNeighbors():
+	cdpNeighborParsedOutput = {}
+
+	headers={"Content-Type": "application/yang-data+json",
+	               "Accept": "application/yang-data+json"}
+	
+	url = "https://{host}:{port}/restconf/data/Cisco-IOS-XE-cdp-oper:cdp-neighbor-details".format(host=deviceHost, port=devicePort)
+
+	# Get CDP data
+	response = requests.get(url, auth=(deviceUser, devicePass), headers=headers, verify=False)
+	# Parse JSON response into python dict
+	responseDict = response.json()
+
+	# Iterate through the data and build parsed output using local interface name as key
+	for neighbor in responseDict["Cisco-IOS-XE-cdp-oper:cdp-neighbor-details"]["cdp-neighbor-detail"]:
+		cdpNeighborParsedOutput[neighbor["local-intf-name"]]=neighbor
+
+	return cdpNeighborParsedOutput;
+
+
+
