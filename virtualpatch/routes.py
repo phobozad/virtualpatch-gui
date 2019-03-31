@@ -41,11 +41,11 @@ def mainPage():
 def editPage(name):
 	return editPageGenerate(name)
 
-def editPageGenerate(name, statusMessage=""):
+def editPageGenerate(name, statusMessage="", errorMessage=""):
 	localXcList=testDataParsing.parseLocalXconnects()
 	curASide=localXcList[name]["a-side"]
 	curZSide=localXcList[name]["z-side"]
-	return template("editPage", xcName=name, statusMessage=statusMessage, curASide=curASide, curZSide=curZSide, xcIntOptions=testDataParsing.interfaceList())
+	return template("editPage", xcName=name, statusMessage=statusMessage, errorMessage=errorMessage, curASide=curASide, curZSide=curZSide, xcIntOptions=testDataParsing.interfaceList())
 
 
 @app.route("/edit/<name>", method="POST")
@@ -54,12 +54,16 @@ def xcEdit(name):
 	url="https://192.168.2.133/restconf/data/Cisco-IOS-XE-native:native/l2vpn/xconnect/context={context}".format(context=name)
 	bodyDict = request.forms
 
+		
+	if not (("a-side" in bodyDict) and ("z-side" in bodyDict)):
+		return editPageGenerate(name, errorMessage="Invalid interface selection")
+	
 	restConfRequest = '{"context":[{"xc-name":"' + name + '","xc-Mode-config-xconnect":{"member":{"interface":[{"interface":"' + bodyDict["a-side"] + '"},{"interface":"' + bodyDict["z-side"] + '"}]}}}]}'
 	
 	restConfResponse = requests.put(url, auth=("admin","cisco"), headers=headers, verify=False, data=restConfRequest)
 
 	if (restConfResponse.status_code >= 200) and (restConfResponse.status_code < 300):
-		return editPageGenerate(name, statusMessage="Change Saved.  IOS-XE says: {}".format(restConfResponse.status_code))
+		return editPageGenerate(name, statusMessage="Change Saved. \r\nIOS-XE says: {}".format(restConfResponse.status_code))
 	else:
-		return editPageGenerate(name, statusMessage="Error saving change.  IOS-XE says: \r\n{}".format(restConfResponse.text))
+		return editPageGenerate(name, errorMessage="Error saving change. \r\nIOS-XE says: \r\n{}".format(restConfResponse.text))
 

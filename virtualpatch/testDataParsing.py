@@ -27,23 +27,30 @@ def parseLocalXconnects():
 		aSide=""
 		zSide=""
 
+	# The below notes look to be inaccurate or possibly inconsistent
 		# Only grab local xconnects
 		# As of 16.8.1 any xconnect to an MPLS destination under an interface config
 		# doesn't show up as a member but the l2vpn context still shows up without any config
 		# We are verifying if the "xc-Mode-config-xconnect" node exists for this xconnect context
-		if "xc-Mode-config-xconnect" in xconnect:
+	#	if "xc-Mode-config-xconnect" in xconnect:
 		
 			# Additionally verify both xconnect members are local interfaces
 			# As of 16.8.1 an xconnect configured with new "xconnect context" config to an MPLS
 			# destination will not show that member under the xconnect context
-			if len(xconnect["xc-Mode-config-xconnect"]["member"]["interface"]) == 2:
-				aSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][0]["interface"]
-				zSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][1]["interface"]
+	#		if len(xconnect["xc-Mode-config-xconnect"]["member"]["interface"]) == 2:
+	#			aSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][0]["interface"]
+	#			zSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][1]["interface"]
 			
 				# Ensure aSide and zSide are both defined and not empty strings
-				if aSide and zSide:
-					xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
+	#			if aSide and zSide:
+	#				xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
+		try:
+			aSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][0]["interface"]
+			zSide = xconnect["xc-Mode-config-xconnect"]["member"]["interface"][1]["interface"]
+		except (IndexError, KeyError):
+			pass
 
+		xconnectParsedOutput[xconnect["xc-name"]]={"a-side": aSide, "z-side": zSide}
 	return xconnectParsedOutput
 
 def interfaceList():
