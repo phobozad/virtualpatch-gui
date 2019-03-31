@@ -31,7 +31,7 @@
 <h1>Patch Panel</h1>
 <table class="table">
 <tr> <th>Patch ID</th> <th>A-Side</th> <th>Z-Side</th> <th></th></tr>
-% for xcName,xcInts in localXcList.items():
+% for xcName,xcInts in sorted(localXcList.items()):
     <tr>
 	<td>{{xcName}}</td>
 	<td>{{xcInts["a-side"]}} - {{xcIntOptions.get(xcInts["a-side"],{}).get("intDescription","")}}</td>

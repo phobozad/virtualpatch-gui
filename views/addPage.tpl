@@ -40,14 +40,14 @@
 	</td>
 	<td>
 		<select id="a-side" name="a-side" class="form-control">
-%		for xcInt,xcIntDetails in xcIntOptions.items():
+%		for xcInt,xcIntDetails in sorted(xcIntOptions.items()):
 		   <option value="{{xcInt}}">{{xcInt + " - " + xcIntDetails["intDescription"]}}</option>
 %		end
 		</select>
 	</td>
 	<td>
 		<select id="z-side" name="z-side" class="form-control">
-%		for xcInt,xcIntDetails in xcIntOptions.items():
+%		for xcInt,xcIntDetails in sorted(xcIntOptions.items()):
 		   <option value="{{xcInt}}">{{xcInt + " - " + xcIntDetails["intDescription"]}}</option>
 %		end
 		</select>

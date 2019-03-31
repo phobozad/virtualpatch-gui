@@ -40,7 +40,7 @@
 	<th>CDP Neighbors</th>
 	<th></th>
   </tr>
-%  for intName,intDetails in intList.items():
+%  for intName,intDetails in sorted(intList.items()):
    <tr>
 	<td></td>
 	<td>{{intName}}</td>
