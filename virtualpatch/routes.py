@@ -36,7 +36,7 @@ def mainPage():
 	statusMessage=request.params.get("statusMessage","")
 	return template("mainPage", localXcList=testDataParsing.parseLocalXconnects(), xcIntOptions=testDataParsing.interfaceList(), errorMessage=errorMessage, statusMessage=statusMessage)
 
-@app.route("/xcedit/<name>")
+@app.route("/xc/edit/<name>")
 def xcEditPage(name):
 	errorMessage=request.params.get("errorMessage","")
 	statusMessage=request.params.get("statusMessage","")
@@ -49,7 +49,7 @@ def xcEditPageGenerate(name, statusMessage="", errorMessage=""):
 	return template("editPage", xcName=name, statusMessage=statusMessage, errorMessage=errorMessage, curASide=curASide, curZSide=curZSide, xcIntOptions=testDataParsing.interfaceList())
 
 
-@app.route("/xcedit/<name>", method="POST")
+@app.route("/xc/edit/<name>", method="POST")
 def xcEdit(name):
 	# Ensure we have both A and Z sides defined
 	# We need to re-push both xconnect members at the same time when we update the device
@@ -69,7 +69,7 @@ def xcDelete(name):
 	if deleteResponse["status"]=="ok":
 		redirect("/?statusMessage=Success: Deleted Patch {name}.".format(name=name))
 	else:
-		redirect("/xcedit/{name}?errorMessage=Error: Delete Failed.".format(name=name))
+		redirect("/xc/edit/{name}?errorMessage=Error: Delete Failed.".format(name=name))
 
 
 @app.route("/ports")

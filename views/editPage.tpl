@@ -25,7 +25,7 @@
 <div id="error" class="alert alert-danger" role="alert">{{errorMessage}}</div>
 <div class="container">
 <h1>Edit Patch - {{xcName}}</h1>
-<form action="/xcedit/{{xcName}}" method="post">
+<form action="/xc/edit/{{xcName}}" method="post">
 <table class="table">
 <tr> <th>Patch ID</th> <th>A-Side</th> <th>Z-Side</th> </tr>
 <tr>

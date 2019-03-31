@@ -32,7 +32,7 @@
 	<td>{{xcInts["a-side"]}} - {{xcIntOptions.get(xcInts["a-side"],{}).get("intDescription","")}}</td>
 	<td>{{xcInts["z-side"]}} - {{xcIntOptions.get(xcInts["z-side"],{}).get("intDescription","")}}</td>
 	<td>
-	  <a href="/xcedit/{{xcName}}"><button type="button" class="btn btn-outline-primary">Edit</button></a>
+	  <a href="/xc/edit/{{xcName}}"><button type="button" class="btn btn-outline-primary">Edit</button></a>
 	</td>
    </tr>
 % end
